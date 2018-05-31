@@ -1,10 +1,5 @@
-<?php
-require("comun.php");
-cabecera("Salidas de los cruceros");
-?>
 <div class="cuerpo">
-
-<!-- tabla con B.D. -->
+    <!-- tabla con B.D. -->
 <table id="t01">
 <!-- Para sacar el nombre de los campos de la tabla -->
 <tr>
@@ -15,6 +10,53 @@ cabecera("Salidas de los cruceros");
 <th>Fecha</th>
 <th>Acciones</th>
 </tr>
+
+<?php
+
+require("comun.php");
+cabecera("Salidas de los cruceros");
+
+$vNoches = isset($_POST['noches']) ? $_POST['noches'] : '';
+$vNombreBarco = isset($_POST['nombre']) ? $_POST['nombre'] : '';
+$vNombrePuerto = isset($_POST['nombre']) ? $_POST['nombre'] : '';
+$vNombrePais = isset($_POST['nombre']) ? $_POST['nombre'] : '';
+$vFechaSalida = isset($_POST['fechaSalida']) ? $_POST['fechaSalida'] : null;
+
+try {
+    $dbh = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
+    /*** echo a message saying we have connected ***/
+
+    /*** The SQL SELECT statement ***/
+    $sql = "Select Itinerarios.noches, Puertos.nombre, Paises.nombre, Barcos.nombre, Salidas.fechaSalida
+            From `Cruceros`.`Itinerarios` JOIN `Cruceros`.`Salidas` On (Itinerarios.codigo = Salidas.Itinerario)
+            JOIN `Cruceros`.`Puertos` JOIN `Cruceros`.`Paises` On (Puertos.pais = Paises.codigo) and (Itinerarios.puertoSalida = Puertos.codigo)
+            JOIN `Cruceros`.`Barcos` On(Itinerarios.barco = Barcos.codigo)"; 
+
+   foreach ($dbh->query($sql) as $row)
+   
+    ?> 
+        <TR>
+            <TD><?php print $row['IdCliente'] ?></TD>
+            <TD><?php print $row['NombreCompany'] ?></TD>
+            <TD><?php print $row['NombreContacto'] ?></TD>
+            <TD><?php print $row['CargoContacto'] ?></TD>
+            <TD><a href="formClientes.php?idCliente=<?php echo $row['IdCliente']; ?>">
+                    <button name="editarCliente" value="editarCliente">Editar</button>
+                </a>
+               
+            </TD>
+        </TR>
+    /*** close the database connection ***/
+    $dbh = null;
+
+}
+catch(PDOException $e)
+{
+    echo $e->getMessage();
+}
+
+{ ?>
+
 <tr>
 <td>7</td>
 <td>Napoles</td>
