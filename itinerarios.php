@@ -12,15 +12,15 @@
 </tr>
 
 <?php
-
+include "conexionDB.php";
 require("comun.php");
 cabecera("Salidas de los cruceros");
 
-$vNoches = isset($_POST['noches']) ? $_POST['noches'] : '';
-$vNombreBarco = isset($_POST['nombre']) ? $_POST['nombre'] : '';
-$vNombrePuerto = isset($_POST['nombre']) ? $_POST['nombre'] : '';
-$vNombrePais = isset($_POST['nombre']) ? $_POST['nombre'] : '';
-$vFechaSalida = isset($_POST['fechaSalida']) ? $_POST['fechaSalida'] : null;
+$vNoches = isset($_POST['Itinerarios.noches']) ? $_POST['Itinerarios.noches'] : '';
+$vNombreBarco = isset($_POST['Barcos.nombre']) ? $_POST['Barcos.nombre'] : '';
+$vNombrePuerto = isset($_POST['Puertos.nombre']) ? $_POST['Puertos.nombre'] : '';
+$vNombrePais = isset($_POST['Paises.nombre']) ? $_POST['Paises.nombre'] : '';
+$vFechaSalida = isset($_POST['Salidas.fechaSalida']) ? $_POST['Salidas.fechaSalida'] : null;
 
 try {
     $dbh = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
@@ -32,21 +32,26 @@ try {
             JOIN `Cruceros`.`Puertos` JOIN `Cruceros`.`Paises` On (Puertos.pais = Paises.codigo) and (Itinerarios.puertoSalida = Puertos.codigo)
             JOIN `Cruceros`.`Barcos` On(Itinerarios.barco = Barcos.codigo)"; 
 
-   foreach ($dbh->query($sql) as $row)
+   foreach ($dbh->query($sql) as $row){
    
-    ?> 
+    ?>  
+
         <TR>
-            <TD><?php print $row['IdCliente'] ?></TD>
-            <TD><?php print $row['NombreCompany'] ?></TD>
-            <TD><?php print $row['NombreContacto'] ?></TD>
-            <TD><?php print $row['CargoContacto'] ?></TD>
-            <TD><a href="formClientes.php?idCliente=<?php echo $row['IdCliente']; ?>">
-                    <button name="editarCliente" value="editarCliente">Editar</button>
+            <TD><?php print $row['noches'] ?></TD>
+            <TD><?php print $row['nombre'] ?></TD>
+            <TD><?php print $row['nombre'] ?></TD>
+            <TD><?php print $row['nombre'] ?></TD>
+            <TD><?php print $row['fechaSalida'] ?></TD>
+            <TD><a href="verEtapas.php?Salidas.codigo=<?php echo $row['Salidas.codigo']; ?>">
+                    <button name="verEtapas" value="verEtapas">Ver Etapas</button>
                 </a>
                
             </TD>
         </TR>
-    /*** close the database connection ***/
+   <?php } ?>
+</table>
+    <?php
+/*** close the database connection ***/
     $dbh = null;
 
 }
@@ -55,64 +60,12 @@ catch(PDOException $e)
     echo $e->getMessage();
 }
 
-{ ?>
+ ?>
 
-<tr>
-<td>7</td>
-<td>Napoles</td>
-<td>IT</td>
-<td>PREZIOSA</td>
-<td>2013-09-02</td>
-<td><a href="verEtapas.php?codigoSalida=1">Ver etapas</a></td>
-</tr>
 
-<tr>
-<td>7</td>
-<td>Napoles</td>
-<td>IT</td>
-<td>PREZIOSA</td>
-<td>2013-09-09</td>
-<td><a href="verEtapas.php?codigoSalida=2">Ver etapas</a></td>
-</tr>
-
-<tr>
-<td>7</td>
-<td>Barcelona</td>
-<td>ES</td>
-<td>SPLENDIDA</td>
-<td>2013-09-02</td>
-<td><a href="verEtapas.php?codigoSalida=3">Ver etapas</a></td>
-</tr>
-
-<tr>
-<td>7</td>
-<td>Barcelona</td>
-<td>ES</td>
-<td>SPLENDIDA</td>
-<td>2013-09-09</td>
-<td><a href="verEtapas.php?codigoSalida=4">Ver etapas</a></td>
-</tr>
-
-<tr>
-<td>7</td>
-<td>Venecia </td>
-<td>IT</td>
-<td>DIVINA</td>
-<td>2013-08-31</td>
-<td><a href="verEtapas.php?codigoSalida=5">Ver etapas</a></td>
-</tr>
-
-<tr>
-<td>7</td>
-<td>Venecia </td>
-<td>IT</td>
-<td>DIVINA</td>
-<td>2013-09-07</td>
-<td><a href="verEtapas.php?codigoSalida=6">Ver etapas</a></td>
-</tr>
-<!-- Aquí terminan las filas de la tabla-->
-</table>
 </div>
+
+    
 <?php
 pie();
 ?>
