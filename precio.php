@@ -1,50 +1,59 @@
 <?php
+include"conexionDB.php";
 require("comun.php");
 cabecera("Cambiar precio");
 ?>
 <body>
 <div class="cuerpo">
 <form name="precio" method="post" action="ej_precio.php">
+<table id="t01">
+<!-- Para sacar el nombre de los campos de la tabla -->
+<tr>
+<th>Nombre</th>
+<th>Precio Noche</th>
 
-<table border="0" align="center">
-<tr><td align="left">Categor&iacute;a: </td>
-<td>
-        <select name="codigo">
-           <option value="FLA">
-                   Super Family Cabin (PVP actual 140 Eur.)
-           </option>
-           <option value="INS">
-                   Interior (PVP actual 50 Eur.)
-           </option>
-           <option value="OUB">
-                   Camarote con balcon (PVP actual 70 Eur.)
-           </option>
-           <option value="OUT">
-                   Vista al mar (PVP actual 60 Eur.)
-           </option>
-           <option value="SAB">
-                   Aurea Suite Balcony (PVP actual 110 Eur.)
-           </option>
-           <option value="SUA">
-                   Aurea Suite (PVP actual 100 Eur.)
-           </option>
-           <option value="SUB">
-                   Suite con balcon (PVP actual 90 Eur.)
-           </option>
-           <option value="SUD">
-                   Deluxe suite (PVP actual 120 Eur.)
-           </option>
-           <option value="SUF">
-                   Suite familiar con balcon (PVP actual 130 Eur.)
-           </option>
-           <option value="SUI">
-                   Suite (PVP actual 80 Eur.)
-           </option>
-           <option value="YTC">
-                   Yacht Club (PVP actual 150 Eur.)
-           </option>
-        </select>
+</tr>
+<header id="header">
+<h1>Neptuno</h1>
+<p>Empresa dedicada a la comercialización de viajes navales de ocio <a href="http://html5up.net">HTML5 UP</a>.</p>
+			</header>
 
+<?php
+
+$vNombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
+$vPrecio = isset($_POST['precioNoche']) ? $_POST['precioNoche']: '' ; 
+
+
+try {
+    $dbh = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
+    /*** echo a message saying we have connected ***/
+
+    /*** The SQL SELECT statement ***/
+    $sql = "Select Categoria.nombre, Categoria.precioNoche From `Cruceros`.`Categoria` Order by precioNoche"; 
+
+   foreach ($dbh->query($sql) as $row){
+   
+    ?>  
+
+        <TR>
+           
+            <TD><?php print $row['nombre'] ?></TD>
+            <TD><?php print $row['precioNoche'] ?></TD>
+        
+    <?php } ?>
+</table>
+    <?php
+/*** close the database connection ***/
+    $dbh = null;
+
+}
+catch(PDOException $e)
+{
+    echo $e->getMessage();
+}
+
+ ?>
+                        
 </td>
 </tr>
 <tr><td align="left">Nuevo Precio: </td><td><input type="text" name="precio" id="precio" /></td></tr>
